@@ -22,24 +22,32 @@ function queen_attack_form() {
         '#title' => 'Queen Location (Letter)',
         '#type' => 'textfield',
         '#description' => t('Please enter the Queen\'s location taken from the bottom of the board.'),
+        '#element_validate' => array('element_validate_letter'),
+        '#required' => TRUE,
     );
 
     $form['queen_spot_y'] = array(
         '#title' => 'Queen Location (Number)',
         '#type' => 'textfield',
         '#description' => t('Please enter the Queen\'s location taken from the side of the board.'),
+        '#element_validate' => array('element_validate_integer_positive', 'element_validate_low_range'),
+        '#required' => TRUE,
     );
 
     $form['target_spot_x'] = array(
         '#title' => 'Target Location (Letter)',
         '#type' => 'textfield',
         '#description' => t('Please enter the Target\'s location taken from the bottom of the board.'),
+        '#element_validate' => array('element_validate_letter'),
+        '#required' => TRUE,
     );
 
     $form['target_spot_y'] = array(
         '#title' => 'Target Location (Number)',
         '#type' => 'textfield',
         '#description' => t('Please enter the Target\'s location taken from the side of the board.'),
+        '#element_validate' => array('element_validate_integer_positive', 'element_validate_low_range'),
+        '#required' => TRUE,
     );
 
     $form['submit'] = array(
@@ -47,6 +55,21 @@ function queen_attack_form() {
         '#value' => 'Attack!',
     );
     return $form;
+}
+
+function element_validate_letter($element) {
+    $useable_letters = array('A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', 'G', 'g', 'H', 'h');
+    foreach($useable_letters as $letter) {
+        if(in_array($element['#value'], $useable_letters) === false) {
+            form_error($element, t('Please enter a single letter between A and H.'));
+        }
+    }
+}
+
+function element_validate_low_range($element) {
+    if($element['#value'] > 8 || $element['#value'] < 0) {
+        form_error($element, t('Please enter a number between 0 and 8.'));
+    }
 }
 
 function queen_attack_form_submit($form, &$form_state) {
