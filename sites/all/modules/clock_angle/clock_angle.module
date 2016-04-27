@@ -1,0 +1,57 @@
+<?php
+
+function clock_angle_menu(){
+    $items['clock_angle'] = array(
+        'title' => 'Clock Angle',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('clock_angle_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['clock_angle_results_page'] = array(
+        'title' => 'Results',
+        'page callback' => 'clock_angle_results',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+function clock_angle_form() {
+    $form['hour_hand'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Hour Hand',
+        '#description' => t('Enter a position for the hour hand as a number.'),
+    );
+    $form['minute_hand'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Minute Hand',
+        '#description' => t('Enter a position for the minute hand as a number.'),
+    );
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Go!',
+    );
+    return $form;
+}
+
+function clock_angle_form_submit($form, &$form_state) {
+    $hour_input = $form_state['values']['hour_hand'];
+    $minute_input = $form_state['values']['minute_hand'];
+
+    $hour_minute_difference = abs((30 * $hour_input) - (5.5 * $minute_input));
+
+    if($hour_minute_difference > 180) {
+        $result = (360 - $hour_minute_difference);
+    } else {
+        $result = $hour_minute_difference;
+    }
+
+    $_SESSION['angle'] = $result;
+
+    $form_state['redirect'] = 'clock_angle_results_page';
+}
+
+function clock_angle_results() {
+    return "<p>The angle between the clock hands is: " . $_SESSION['angle'] . "</p>";
+}
