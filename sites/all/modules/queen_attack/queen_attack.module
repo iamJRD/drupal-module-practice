@@ -57,6 +57,12 @@ function queen_attack_form() {
     return $form;
 }
 
+function queen_attack_form_validate($form, &$form_state) {
+    if(($form_state['values']['queen_spot_x'] == $form_state['values']['target_spot_x']) && ($form_state['values']['queen_spot_y'] == $form_state['values']['target_spot_y'])) {
+        form_set_error('queen_spot_x', 'These pieces are on the same spot!');
+    }
+}
+
 function element_validate_letter($element) {
     $useable_letters = array('A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', 'G', 'g', 'H', 'h');
     foreach($useable_letters as $letter) {
