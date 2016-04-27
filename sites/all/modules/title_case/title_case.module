@@ -1,0 +1,42 @@
+<?php
+
+function title_case_menu() {
+    $items['title_case'] = array(
+        'title' => 'Title Case',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('title_case_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['title_case_results_page'] = array(
+        'title' => 'Title Case Results',
+        'page callback' => 'title_case_results',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+function title_case_form() {
+    $form['inputted_text'] = array(
+        '#title' => 'Input Text',
+        '#type' => 'textfield',
+        '#description' => t('Enter in a string of words and see what happens!'),
+    );
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'go',
+    );
+    return $form;
+}
+
+function title_case_form_submit($form, &$form_state) {
+    $inputted_text = $form_state['values']['inputted_text'];
+
+    $_SESSION['results'] = ucwords($inputted_text);
+    $form_state['redirect'] = 'title_case_results_page';
+}
+
+function title_case_results() {
+    return "<p>" . $_SESSION['results'] . "</p>";
+}

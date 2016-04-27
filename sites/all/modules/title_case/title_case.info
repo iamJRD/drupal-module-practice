@@ -1,0 +1,5 @@
+name = Title Case
+description = Takes user input and automatically capitalizes the first letter of each word.
+package = Epicodus Examples
+core = 7.x
+files[] = title_case.module
