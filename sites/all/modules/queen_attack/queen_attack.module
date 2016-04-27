@@ -56,10 +56,58 @@ function queen_attack_form_submit($form, &$form_state) {
     $target_y = $form_state['values']['target_spot_y'];
     $results = null;
 
-    if($queen_x == $target_x || $queen_y == $target_y) {
-        $results = true;
+    $queen_x = strtolower($queen_x);
+    $target_x = strtolower($target_x);
+
+    if($queen_x == 'a') {
+        $queen_x = 1;
+    } elseif($queen_x == 'b') {
+        $queen_x = 2;
+    } elseif($queen_x == 'c') {
+        $queen_x = 3;
+    } elseif($queen_x == 'd') {
+        $queen_x = 4;
+    } elseif($queen_x == 'e') {
+        $queen_x = 5;
+    } elseif($queen_x == 'f') {
+        $queen_x = 6;
+    } elseif($queen_x == 'g') {
+        $queen_x = 7;
+    } elseif($queen_x == 'h') {
+        $queen_x = 8;
     } else {
-        $results = false;
+        $queen_x = 100;
+    }
+
+    if($target_x == 'a') {
+        $target_x = 1;
+    } elseif($target_x == 'b') {
+        $target_x = 2;
+    } elseif($target_x == 'c') {
+        $target_x = 3;
+    } elseif($target_x == 'd') {
+        $target_x = 4;
+    } elseif($target_x == 'e') {
+        $target_x = 5;
+    } elseif($target_x == 'f') {
+        $target_x = 6;
+    } elseif($target_x == 'g') {
+        $target_x = 7;
+    } elseif($target_x == 'h') {
+        $target_x = 8;
+    } else {
+        $target_x = 100;
+    }
+
+    $x_value = abs($queen_x - $target_x);
+    $y_value = abs($queen_y - $target_y);
+
+    if($x_value > 7 || $y_value > 7) {
+        $results = "not on board";
+    } elseif($queen_x == $target_x || $queen_y == $target_y || $x_value == $y_value) {
+        $results = "true";
+    } else {
+        $results = "false";
     }
     $_SESSION['outcome'] = $results;
 
@@ -67,10 +115,12 @@ function queen_attack_form_submit($form, &$form_state) {
 }
 
 function queen_attack_results() {
-    if($_SESSION['outcome'] == true) {
+    if($_SESSION['outcome'] == "true") {
         $outcome = "<h1>The Queen takes the other piece!</h1>";
-    } else {
+    } elseif($_SESSION['outcome'] == "false") {
         $outcome = "<h1>The Queen misses!</h1>";
+    } elseif($_SESSION['outcome'] == "not on board") {
+        $outcome = "<h1>Please enter valid chess board locations!</h1>";
     }
     return $outcome;
 }
