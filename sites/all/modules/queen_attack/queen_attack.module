@@ -1,0 +1,76 @@
+<?php
+
+function queen_attack_menu() {
+    $items['queen_attack'] = array(
+        'title' => 'Queen Attack',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('queen_attack_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['queen_attack_results_page'] = array(
+        'title' => 'Results',
+        'page callback' => 'queen_attack_results',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+function queen_attack_form() {
+    $form['queen_spot_x'] = array(
+        '#title' => 'Queen Location (Letter)',
+        '#type' => 'textfield',
+        '#description' => t('Please enter the Queen\'s location taken from the bottom of the board.'),
+    );
+
+    $form['queen_spot_y'] = array(
+        '#title' => 'Queen Location (Number)',
+        '#type' => 'textfield',
+        '#description' => t('Please enter the Queen\'s location taken from the side of the board.'),
+    );
+
+    $form['target_spot_x'] = array(
+        '#title' => 'Target Location (Letter)',
+        '#type' => 'textfield',
+        '#description' => t('Please enter the Target\'s location taken from the bottom of the board.'),
+    );
+
+    $form['target_spot_y'] = array(
+        '#title' => 'Target Location (Number)',
+        '#type' => 'textfield',
+        '#description' => t('Please enter the Target\'s location taken from the side of the board.'),
+    );
+
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Attack!',
+    );
+    return $form;
+}
+
+function queen_attack_form_submit($form, &$form_state) {
+    $queen_x = $form_state['values']['queen_spot_x'];
+    $queen_y = $form_state['values']['queen_spot_y'];
+    $target_x = $form_state['values']['target_spot_x'];
+    $target_y = $form_state['values']['target_spot_y'];
+    $results = null;
+
+    if($queen_x == $target_x || $queen_y == $target_y) {
+        $results = true;
+    } else {
+        $results = false;
+    }
+    $_SESSION['outcome'] = $results;
+
+    $form_state['redirect'] = 'queen_attack_results_page';
+}
+
+function queen_attack_results() {
+    if($_SESSION['outcome'] == true) {
+        $outcome = "<h1>The Queen takes the other piece!</h1>";
+    } else {
+        $outcome = "<h1>The Queen misses!</h1>";
+    }
+    return $outcome;
+}
