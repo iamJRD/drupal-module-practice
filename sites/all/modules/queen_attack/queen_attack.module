@@ -76,7 +76,7 @@ function queen_attack_form_submit($form, &$form_state) {
     } elseif($queen_x == 'h') {
         $queen_x = 8;
     } else {
-        $queen_x = 100;
+        $queen_x = 1000;
     }
 
     if($target_x == 'a') {
@@ -103,11 +103,11 @@ function queen_attack_form_submit($form, &$form_state) {
     $y_value = abs($queen_y - $target_y);
 
     if($x_value > 7 || $y_value > 7) {
-        $results = "not on board";
+        $results = 99;
     } elseif($queen_x == $target_x || $queen_y == $target_y || $x_value == $y_value) {
-        $results = "true";
+        $results = true;
     } else {
-        $results = "false";
+        $results = false;
     }
     $_SESSION['outcome'] = $results;
 
@@ -115,11 +115,12 @@ function queen_attack_form_submit($form, &$form_state) {
 }
 
 function queen_attack_results() {
-    if($_SESSION['outcome'] == "true") {
+    print_r($_SESSION['outcome']);
+    if($_SESSION['outcome'] === true) {
         $outcome = "<h1>The Queen takes the other piece!</h1>";
-    } elseif($_SESSION['outcome'] == "false") {
+    } elseif($_SESSION['outcome'] === false) {
         $outcome = "<h1>The Queen misses!</h1>";
-    } elseif($_SESSION['outcome'] == "not on board") {
+    } elseif($_SESSION['outcome'] === 99) {
         $outcome = "<h1>Please enter valid chess board locations!</h1>";
     }
     return $outcome;
