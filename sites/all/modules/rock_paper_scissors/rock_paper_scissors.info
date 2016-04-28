@@ -1,0 +1,5 @@
+name = Rock Paper Scissors
+description = A module for a 2 player game of rock paper scissors.
+package = Epicodus Examples
+core = 7.x
+files[] = rock_paper_scissors.module

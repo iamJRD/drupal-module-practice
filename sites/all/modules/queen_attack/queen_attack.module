@@ -144,7 +144,6 @@ function queen_attack_form_submit($form, &$form_state) {
 }
 
 function queen_attack_results() {
-    print_r($_SESSION['outcome']);
     if($_SESSION['outcome'] === true) {
         $outcome = "<h1>The Queen takes the other piece!</h1>";
     } elseif($_SESSION['outcome'] === false) {

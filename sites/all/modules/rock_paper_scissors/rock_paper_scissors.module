@@ -1,0 +1,88 @@
+<?php
+
+function rock_paper_scissors_menu() {
+    $items['rock_paper_scissors'] = array(
+        'title' => 'Rock Paper Scissors - Player 1',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('player1_rock_paper_scissors_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['rock_paper_scissors_player2'] = array(
+        'title' => 'Rock Paper Scissors - Player 2',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('player2_rock_paper_scissors_form'),
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    $items['rock_paper_scissors_game_over'] = array(
+        'title' => 'Game Over',
+        'page callback' => 'rock_paper_scissors_results',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+function player1_rock_paper_scissors_form() {
+    $form['player1'] = array(
+        '#title' => 'Weapon',
+        '#description' => t('Choose between rock, paper, or scissors.'),
+        '#type' => 'textfield',
+        '#element_validate' => array('element_validate_input'),
+        '#required' => TRUE,
+    );
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Go!',
+    );
+    return $form;
+}
+
+function element_validate_input($element) {
+    $inputted_weapon = strtolower($element['#value']);
+    if($inputted_weapon !== 'rock' && $inputted_weapon !== 'paper' && $inputted_weapon !== 'scissors') {
+        form_error($element, t('I TOLD YOU TO PICK BETWEEN ROCK, PAPER, OR SCISSORS! LISTEN TO ME, DAMNIT!'));
+    }
+}
+
+function player1_rock_paper_scissors_form_submit($form, &$form_state) {
+    $_SESSION['player1'] = $form_state['values']['player1'];
+    $form_state['redirect'] = 'rock_paper_scissors_player2';
+}
+
+function player2_rock_paper_scissors_form() {
+    $form['player2'] = array(
+        '#title' => 'Weapon',
+        '#description' => t('Choose between rock, paper, or scissors.'),
+        '#element_validate' => array('element_validate_input'),
+        '#type' => 'textfield',
+        '#required' => TRUE,
+    );
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'FIGHT!',
+    );
+    return $form;
+}
+
+
+function player2_rock_paper_scissors_form_submit($form, &$form_state) {
+    $player1_turn = strtolower($_SESSION['player1']);
+    $_SESSION['player2'] = $form_state['values']['player2'];
+    $player2_turn = strtolower($_SESSION['player2']);
+
+    $winner = '';
+    if($player1_turn === 'rock' && $player2_turn === 'paper'){
+        $winner = 'Player One Wins';
+    } elseif {
+        $winner = 'Error';
+    }
+
+    $_SESSION['game_outcome'] = $winner;
+    $form_state['redirect'] = 'rock_paper_scissors_game_over';
+}
+
+function rock_paper_scissors_results(){
+    return $_SESSION['game_outcome'];
+}
