@@ -22,17 +22,31 @@ function clock_angle_form() {
         '#type' => 'textfield',
         '#title' => 'Hour Hand',
         '#description' => t('Enter a position for the hour hand as a number.'),
+        '#element_validate' => array('element_validate_number', 'element_validate_hour_range'),
     );
     $form['minute_hand'] = array(
         '#type' => 'textfield',
         '#title' => 'Minute Hand',
         '#description' => t('Enter a position for the minute hand as a number.'),
+        '#element_validate' => array('element_validate_number', 'element_validate_minute_range'),
     );
     $form['submit'] = array(
         '#type' => 'submit',
         '#value' => 'Go!',
     );
     return $form;
+}
+
+function element_validate_hour_range($element){
+    if($element['#value'] < 1 || $element['#value'] > 12){
+        form_error($element, t('Hour must be between 1 - 12'));
+    }
+}
+
+function element_validate_minute_range($element){
+    if($element['#value'] < 0 || $element['#value'] > 60){
+        form_error($element, t('Minute must be between 0 - 60'));
+    }
 }
 
 function clock_angle_form_submit($form, &$form_state) {
