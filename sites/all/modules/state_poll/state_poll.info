@@ -1,0 +1,5 @@
+name = Sate Poll
+description = A module for taking votes of favorite ice cream within a state
+package = Epicodus Examples
+core = 7.x
+files[] = state_poll.module

@@ -1,0 +1,119 @@
+<?php
+
+function state_poll_menu() {
+    $items['state_poll'] = array(
+        'title' => 'State Ice Cream Poll',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('state_poll_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['state_poll_success_page'] = array(
+        'title' => 'State Ice Cream Poll Success',
+        'page callback' => 'state_poll_success',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+function state_poll_form(){
+    $ice_cream_flavors = array('Vanilla' => 'Vanilla', 'Chocolate' => 'Chocolate', 'Strawberry' => 'Strawberry', 'Coffee' => 'Coffee', 'Mint Chocolate Chip' => 'Mint Chocolate Chip', 'Cookie Dough' => 'Cookie Dough', 'Rocky Road' => 'Rocky Road');
+
+    $form['state'] = array(
+        '#title' => 'State',
+        '#description' => 'Enter the state you live in',
+        '#type' => 'textfield',
+        '#element_validate' => array('element_validate_state_input'),
+        '#required' => TRUE,
+    );
+    $form['flavor'] = array(
+        '#title' => 'Flavor',
+        '#description' => 'Enter the flavor of ice cream you want to vote for',
+        '#type' => 'select',
+        '#options' => $ice_cream_flavors,
+        '#required' => TRUE,
+    );
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Submit',
+    );
+    return $form;
+}
+
+function element_validate_state_input($element){
+    $input_state = strtoupper($element['#value']);
+
+    // $numerical_array = array('thing1', 'thing2');
+    // $associative_array = array(0 => 'thing1', 1 => 'thing2');
+    // $another_associative_array = array('favoritething' => 'thing1', 'leastfavorite' => 'thing2');
+
+    $states = array(
+        'AL', 'ALABAMA',
+        'AK', 'ALASKA',
+        'AZ', 'ARIZONA',
+        'CA', 'CALIFORNIA',
+        'CO', 'COLORADO',
+        'CT', 'CONNECTICUT',
+        'DE', 'DELWARE',
+        'FL', 'FLORIDA',
+        'GA', 'GEORGIA',
+        'HI', 'HAWAII',
+        'ID', 'IDAHO',
+        'IL', 'ILLINOIS',
+        'IN', 'INDIANA',
+        'IA', 'IOWA',
+        'KS', 'KANSAS',
+        'KY', 'KENTUCKY',
+        'LA', 'LOUISIANA',
+        'ME', 'MAINE',
+        'MD', 'MARYLAND',
+        'MA', 'MASSACHUSETTS',
+        'MI', 'MICHIGAN',
+        'MN', 'MINNESTOA',
+        'MS', 'MISSISSIPPI',
+        'MO', 'MISSOURI',
+        'MT', 'MONTANA',
+        'NE', 'NEBRASKA',
+        'NV', 'NEVADA',
+        'NH', 'NEW HAMPSHIRE',
+        'NJ', 'NEW JERSEY',
+        'NM', 'NEW MEXICO',
+        'NY', 'NEW YORK',
+        'NC', 'NORTH CAROLINA',
+        'ND', 'NORTH DAKOTA',
+        'OH', 'OHIO',
+        'OK', 'OKLAHOMA',
+        'OR', 'OREGON',
+        'PA', 'PENNSYLVANIA',
+        'RI', 'RHODE ISLAND',
+        'SC', 'SOUTH CAROLINA',
+        'SD', 'SOUTH DAKOTA',
+        'TN', 'TENNESSEE',
+        'TX', 'TEXAS',
+        'UT', 'UTAH',
+        'VT', 'VERMONT',
+        'VA', 'VIRGINIA',
+        'WA', 'WASHINGTON',
+        'WV', 'WEST VIRGINIA',
+        'WI', 'WISCONSIN',
+        'WY', 'WYOMING'
+    );
+    if(!in_array($input_state, $states)){
+        form_error($element, t('Please Enter A Valid State or State Abbreviation.'));
+    }
+}
+
+function state_poll_form_submit($form, &$form_state){
+    $inputted_state = $form_state['values']['state'];
+    $inputted_flavor = $form_state['values']['flavor'];
+    $result = t("Thank you! We have you down for " . $inputted_flavor . " in the state of "  . $inputted_state . "!");
+
+    $_SESSION['user_results'] = $result;
+    $form_state['redirect'] = 'state_poll_success_page';
+}
+
+function state_poll_success(){
+    $outcome = $_SESSION['user_results'];
+    return $outcome;
+}
