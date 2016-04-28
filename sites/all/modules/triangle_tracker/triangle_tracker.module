@@ -1,0 +1,74 @@
+<?php
+
+function triangle_tracker_menu() {
+    $items['triangle_tracker'] = array(
+        'title' => 'Triangle Tracker',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('triangle_tracker_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['triangle_tracker_success_page'] = array(
+        'title' => 'Triangle Tracker Success Page',
+        'page callback' => 'triangle_tracker_success',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+function triangle_tracker_form() {
+    $form['side1'] = array(
+        '#title' => 'Side One',
+        '#description' => t('Enter the length of side one of the triangle.'),
+        '#type' => 'textfield',
+        '#element_validate' => array('element_validate_number'),
+        '#required' => TRUE,
+    );
+
+    $form['side2'] = array(
+        '#title' => 'Side Two',
+        '#description' => t('Enter the length of side two of the triangle.'),
+        '#type' => 'textfield',
+        '#element_validate' => array('element_validate_number'),
+        '#required' => TRUE,
+    );
+
+    $form['side3'] = array(
+        '#title' => 'Side Three',
+        '#description' => t('Enter the length of side three of the triangle.'),
+        '#type' => 'textfield',
+        '#element_validate' => array('element_validate_number'),
+        '#required' => TRUE,
+    );
+
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Check it!',
+    );
+
+    return $form;
+}
+
+function triangle_tracker_form_submit($form, &$form_state){
+    $side1 = $form_state['values']['side1'];
+    $side2 = $form_state['values']['side2'];
+    $side3 = $form_state['values']['side3'];
+
+    $traingle = '';
+    if($side1 > $side2 + $side3 || $side2 > $side1 + $side3 || $side3 > $side1 + $side2){
+        $triangle = "Not a Triangle";
+    } elseif($side1 === $side2 && $side2 === $side3){
+        $triangle = "Equilateral";
+    } elseif($side1 === $side2 || $side2 === $side3 || $side3 === $side1){
+        $triangle = "Isosceles";
+    } else{
+        $triangle = "Scalene";
+    }
+    $_SESSION['triangle_output'] = $triangle;
+    $form_state['redirect'] = 'triangle_tracker_success_page';
+}
+
+function triangle_tracker_success(){
+    return $_SESSION['triangle_output'];
+}

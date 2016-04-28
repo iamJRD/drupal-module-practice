@@ -1,0 +1,5 @@
+name = Triangle Tracker
+description = Displays whether the three entered sides in a form equal a triangle.
+package = Epicodus Examples
+core = 7.x
+files[] = triangle_tracker.module

@@ -1,0 +1,15 @@
+Behavior: Returns 'Equilateral' if all sides are the same
+Input: $side1 = 4, $side2 = 4, $side3 = 4
+Output: 'Equilateral'
+
+Behavior: Returns 'Isosceles' if at least two sides are the same
+Input: $side1 = 4, $side2 = 4, $side3 = 3
+Output: 'Isosceles'
+
+Behavior: Returns 'Scalene' if none of the sides are the same
+Input: $side1 = 10 $side = 5 $side3 = 8
+Output: 'Scalene'
+
+Behavior: Returns 'Not a Triangle' if the sum of two sides is less than the third side
+Input: $side1 = 2 $side2 = 2 $side3 = 10
+Output: 'Not a triangle'
