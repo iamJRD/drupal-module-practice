@@ -1,0 +1,52 @@
+<?php
+
+function ajax_link_menu() {
+  $items['ajax-test'] = array(
+    'title' => 'Ajax Test',
+    'page callback' => 'ajax_link_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['my-ajax-test/%'] = array(
+    'title' => 'Ajax Test Callback',
+    'page callback' => 'ajax_link_callback',
+    'access arguments' => array('access content'),
+    'page arguments' => array(1),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+function ajax_link_page() {
+  return array(
+    '#type' => 'link',
+    '#title' => t('Ajax Link'),
+    '#href' => 'my-ajax-test/nojs',
+    '#prefix' => '<div id="ajax-link">',
+    '#suffix' => '</div><div id="ajax-display"></div>',
+    '#ajax' => array(
+      'effect' => 'fade',
+    ),
+  );
+}
+
+function ajax_link_callback($ajax) {
+  $time = t('The current time is : !time', array('!time' => date('Y-m-d H:i:s')));
+
+  if ($ajax == 'ajax') {
+  $commands = array();
+
+  $commands[] = ajax_command_replace('#ajax-display', '<div id="ajax-display">' . $time . "</div>");
+
+  $commands[] = ajax_command_changed('#ajax-display');
+
+  $commands[] = ajax_command_invoke(NULL, "ajax_link");
+
+  ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
+}
+else {
+  return array('#markup' => $time,);
+  }
+}
